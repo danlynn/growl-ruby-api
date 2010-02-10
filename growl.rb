@@ -39,7 +39,8 @@ class Growl
   #   Growl.new(:default_app => "My Cool App") => Growl instance with custom default app name
   #
   # Constructs a new instance of Growl configuring the following growl registration 
-  # attributes and defaults via an options hash.
+  # attributes and defaults via an options hash.  After configuring the attributes
+  # and default fields, they are used to register an application with Growl.
   #
   # ==== Options
   #
@@ -105,6 +106,47 @@ class Growl
   end
 
 
+  # call-seq:
+  #   Growl.register() => Register with Growl using the defaults specified in
+  #                       the constructor's options
+  #   Growl.register(:app => "Another Cool App") => Register with Growl
+  #
+  # Manually registers another application with Growl in addition to the
+  # registration performed by the constructor using all the attribute and
+  # default fields.  This method also assigns the value of @growl_enabled
+  # field depending upon whether or not communication could be established with
+  # the Growl framework.
+  #
+  # ==== Options
+  #
+  # * <tt>:app</tt> - application name to be registered
+  #     if :app option is not specified then value of @default_app field is used
+  # * <tt>:all_notifications</tt> - list of all notification names to be registered
+  #     if :all_notifications option is not specified then value of
+  #     @all_notifications field is used.
+  # * <tt>:enabled_notifications</tt> - list of enabled notification names to be registered
+  #     Must be a subset of :all_notifications
+  #     if :enabled_notifications option is not specified then value of
+  #     @enabled_notifications field is used.
+  # * <tt>:image_type</tt> - notification image type to be registered
+  #     Growl will use :image_type with :image to register a default application
+  #     to be associated with all notifications for the specified :app unless 
+  #     overridden in the Growl#notify() method's options.
+  #     Any value other than :app_icon will be ignored since only an icon of 
+  #     an application may be registered to be associated with the :app.
+  #     If :image_type option is not specified then value of @default_image_type
+  #     is used.  If one of (:none, :file_icon, :image_file) is resolved from
+  #     :image_type or @default_image_type then no image is registered - but 
+  #     @default_image_type will still be used on each call to Growl#notify().
+  # * <tt>:image</tt> - notification image specifier to be registered
+  #     Growl will use :image_type with :image to register a default application
+  #     to be associated with all notifications for the specified :app unless 
+  #     overridden in the Growl#notify() method's options.
+  #     Since only :app_icon is allowed for :image_type option, :image must 
+  #     represent an app name if provided.  If :image option is not specified
+  #     then value of @default_image is used.  Note that this value will be 
+  #     ignored if :image_type option value is not :app_icon - but 
+  #     @default_image will still be used on each call to Growl#notify().
   def register(options = {})
     options = {
         :app => @default_app,
@@ -126,7 +168,7 @@ class Growl
 				register as application "#{options[:app]}" \
 					all notifications {"#{options[:all_notifications].join('","')}"} \
 					default notifications {"#{options[:enabled_notifications].join('","')}"} \
-					#{image_syntax(options[:image_type], options[:image])}
+					#{image_syntax(options[:image_type], options[:image]) if options[:image_type] == :app_icon}
 			end tell
       ARG
     else
@@ -135,6 +177,31 @@ class Growl
   end
 
 
+  # call-seq:
+  #   Growl.notify("message") => Display a Growl notification
+  #   Growl.notify("message", :title => "Alert") => Display a Growl notification
+  #       specifying a custom title
+  #
+  # Display 'message' as a Growl notification with the specified 'options'.
+  #
+  # ==== Options
+  #
+  # * <tt>:title</tt> - title to associate with this notify
+  #     The title text usually appears in the Growl notification in addition 
+  #     to the 'message' text.  If :title option is not specified then the 
+  #     value of @default_title field is used.
+  # * <tt>:notification</tt> - notification name to associate with this notify
+  #     Growl will use this in combination with :app to determine the 
+  #     registered configuration to be used to display the notification.  The 
+  #     notification name must be a member of @all_notifications.  If 
+  #     :notification is not specified then value of @default_notification 
+  #     field is used.
+  # * <tt>:app</tt> - application name to associate with this notify
+  #     Growl will use this in combination with :notification to determine the
+  #     registered configuration to be used to display the notification.
+  #     if :app option is not specified then value of @default_app field is 
+  #     used.
+  # TODO finish documenting options param
   def notify(message, options = {})
     options = {
       :title => @default_title,
@@ -162,6 +229,7 @@ class Growl
           description "#{message}" \
           application name "#{options[:app]}" \
           #{"sticky 'yes'" if options[:sticky]} \
+          #{"priority #{options[:priority]}" if options[:priority]} \
           #{image_syntax(options[:image_type], options[:image])}
       end tell
       ARG
