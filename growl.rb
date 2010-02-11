@@ -201,7 +201,24 @@ class Growl
   #     registered configuration to be used to display the notification.
   #     if :app option is not specified then value of @default_app field is 
   #     used.
-  # TODO finish documenting options param
+  # * <tt>:image_type</tt> - specifies whether :image is an app or file icon or an image path
+  #     :image_type must be one of (:none, :app_icon, :file_icon, :image_file).  
+  #     This value is used in combination with :image option to specify a 
+  #     custom image for this specific notification.  If no :image_type is
+  #     provided then @default_image_type is used.  If a @default_image_type
+  #     and @default_image is defined but you explicitly don't want an image 
+  #     to be displayed for this specific notification then pass :none for
+  #     :image_type option.
+  # * <tt>:image</tt> - application name or file path depending on :image_type
+  #     If :image_type is :app_icon then :image specifies the name of the 
+  #     application whose icon should be displayed for this specific 
+  #     notification (eg: "iTunes.app").  If :image_type is :file_icon then 
+  #     :image specifies the path to a file whose icon should be displayed 
+  #     (eg: "docs/word/report.docx").  If :image_type is :image_file then 
+  #     :image specifies the path to an image file to be displayed (eg: 
+  #     images/alert.png)
+  # * <tt>:priority</tt> - priority for this notification (-2, -1, 0, 1, 2)
+  # * <tt>:sticky</tt> - if true then this notification remains on the screen
   def notify(message, options = {})
     options = {
       :title => @default_title,
@@ -239,6 +256,7 @@ class Growl
   end
 
 
+  # Utility methods -----------------------------------------------------------
   def applescript(script)
     `/usr/bin/osascript <<EOSCRIPT\n#{script}\nEOSCRIPT`
   end
