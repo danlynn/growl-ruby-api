@@ -4,10 +4,10 @@ require 'pathname'
 
 FileUtils.cd(Pathname(__FILE__).parent.realpath)  # enable relative paths (even in require)
 
-require '../growl'
+require '../lib/growl'
 
 class GrowlTest < Test::Unit::TestCase
-
+  include GrowlRubyApi
   # Called before every test method runs. Can be used
   # to set up fixture information.
   def setup
