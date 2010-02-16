@@ -239,7 +239,6 @@ module GrowlRubyApi
         raise ArgumentError, ":priority must be between -2 and 2 inclusive"
       end
       if @growl_enabled
-        puts 'here'
         applescript(<<-ARG)
         tell application "GrowlHelperApp"
           notify with name "#{options[:notification]}" \
@@ -251,7 +250,6 @@ module GrowlRubyApi
             #{image_syntax(options[:image_type], options[:image])}
         end tell
         ARG
-        puts 'there'
       else
         puts("#{options[:notification]}: #{title}: #{message}")
       end
