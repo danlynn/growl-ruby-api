@@ -5,6 +5,7 @@ require 'pathname'
 FileUtils.cd(Pathname(__FILE__).parent.realpath)  # enable relative paths (even in require)
 
 require '../lib/growl'
+require '../lib/growl_logger'
 
 class GrowlTest < Test::Unit::TestCase
   include GrowlRubyApi
@@ -95,4 +96,14 @@ class GrowlTest < Test::Unit::TestCase
     end
   end
 
+  # Initial test case for Logger
+  def test_logger_basic
+    logger = GrowlLogger.new(
+      :default_app => "Growl Logger Test",
+      :default_title => "GL Title"
+    )
+    logger.level = Logger::WARN
+    logger.info("Info")
+    logger.warn("Warn")
+  end
 end
