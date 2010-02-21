@@ -102,8 +102,11 @@ class GrowlTest < Test::Unit::TestCase
       :default_app => "Growl Logger Test",
       :default_title => "GL Title"
     )
-    logger.level = Logger::WARN
+    logger.level = Logger::DEBUG
+    logger.debug("Debug")
     logger.info("Info")
     logger.warn("Warn")
+    logger.error("Error")
+    logger.fatal("Fatal");
   end
 end

@@ -1,34 +1,34 @@
-# The Growl class provides a simple notification interface between ruby and the
-# Growl (http://growl.info/) notification framework available for OSX.  If Growl
-# is disabled, not installed, or not running on OSX then notifications fail back
-# to $stdout.
-#
-# Usage: Create an instance of Growl passing configuration args to the
-# constructor.  These include defaults for such things as notification icons,
-# app name, notification name, etc.  See Growl#initialize for list of defaults
-# and their reasonable default values if not specified (eg: default_app = base
-# name of executing script $0).
-#
-# Once an instance of Growl has been instantiated, you can check the
-# Growl#growl_enabled field to determine whether or not Growl is enabled on the
-# current system.  If Growl is not enabled then calls to Growl#notify will
-# continue to work - but will write to $stdout instead using the format:
-# <notification>: <title>: <message>
-#
-# ==== Example
-#
-#     growl = Growl.new(
-#         :default_app => "ClamAV Scan Report", 
-#         :default_title => "ClamAV", 
-#         :default_image_type => :image_file, 
-#         :default_image => "images/notify.gif"
-#     )
-#     growl.notify("Updating definitions", :title => "FreshClam")
-#     freshclam()
-#     growl.notify("Scan started")
-#     scan()
-#     growl.notify("Scan completed")
 module GrowlRubyApi
+  # The Growl class provides a simple notification interface between ruby and the
+  # Growl (http://growl.info/) notification framework available for OSX.  If Growl
+  # is disabled, not installed, or not running on OSX then notifications fail back
+  # to $stdout.
+  #
+  # Usage: Create an instance of Growl passing configuration args to the
+  # constructor.  These include defaults for such things as notification icons,
+  # app name, notification name, etc.  See Growl#initialize for list of defaults
+  # and their reasonable default values if not specified (eg: default_app = base
+  # name of executing script $0).
+  #
+  # Once an instance of Growl has been instantiated, you can check the
+  # Growl#growl_enabled field to determine whether or not Growl is enabled on the
+  # current system.  If Growl is not enabled then calls to Growl#notify will
+  # continue to work - but will write to $stdout instead using the format:
+  # <notification>: <title>: <message>
+  #
+  # ==== Example
+  #
+  #     growl = Growl.new(
+  #         :default_app => "ClamAV Scan Report", 
+  #         :default_title => "ClamAV", 
+  #         :default_image_type => :image_file, 
+  #         :default_image => "images/notify.gif"
+  #     )
+  #     growl.notify("Updating definitions", :title => "FreshClam")
+  #     freshclam()
+  #     growl.notify("Scan started")
+  #     scan()
+  #     growl.notify("Scan completed")
   class Growl
 
     attr_accessor :default_app, :default_title, :all_notifications, :enabled_notifications, :default_notification, :default_image_type, :default_image

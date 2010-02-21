@@ -12,8 +12,10 @@ require 'rake'
 # require 'rake/packagetask'
 require 'rake/testtask'
 require 'rake/rdoctask'
-require 'growl'
 
+# require the various ruby files when running rake tasks to make sure these files load correctly
+require 'growl'
+require 'growl_logger'
 
 Rake::TestTask.new do |t|
   t.libs << "test"
